@@ -3,51 +3,6 @@ schema {
   mutation: Mutations
 }
 
-"""More information about me"""
-type About implements TSSearchable {
-  portrait(locale: String, enableLocaleFallback: Boolean = true): Asset
-  socialProfiles: [AboutSocialProfiles]
-  biography: JSON
-  biographyHtml(
-    imageConfig: JSON
-    images: TSImagesConfig
-
-    """A prefix to be all CSS classes in the generated HTML"""
-    classPrefix: String = ""
-  ): String
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _createdBy: TSUser
-  _updatedAt: String
-  _updatedBy: TSUser
-  _schemaVersion: Float
-  _enabled: Boolean @deprecated(reason: "Use _status instead")
-  _enabledAt: String @deprecated(reason: "Use a custom date field instead")
-  _status: DefaultWorkflow
-  searchSummary: String
-}
-
-type AboutPaginatedList {
-  results: [About] @deprecated(reason: "Use items instead")
-  items: [About]
-  total: Int
-}
-
-type AboutSocialProfiles {
-  profileUrl: String!
-  socialNetworkIcon(locale: String, enableLocaleFallback: Boolean = true): Asset
-  socialNetwork: String!
-}
-
-input AboutSocialProfilesInput {
-  profileUrl: String
-  socialNetworkIcon: TSRelationshipInput
-  socialNetwork: String
-}
-
 """The built-in TakeShape asset model"""
 type Asset implements TSSearchable {
   title: String
@@ -85,10 +40,6 @@ type Asset implements TSSearchable {
   _enabled: Boolean @deprecated(reason: "Use _status instead")
   _enabledAt: String @deprecated(reason: "Use a custom date field instead")
   _status: DefaultWorkflow
-  _references(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): UndefinedReferencePaginatedList
-  projectSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): ProjectPaginatedList
-  aboutSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): AboutPaginatedList
-  clientSet(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): ClientPaginatedList
   searchSummary: String
 }
 
@@ -168,59 +119,6 @@ type BaseAsset implements TSSearchable {
   searchSummary: String
 }
 
-"""Clients comission the projects in my portfolio"""
-type Client implements TSSearchable {
-  name: String!
-  logo(locale: String, enableLocaleFallback: Boolean = true): Asset
-  url: String!
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _createdBy: TSUser
-  _updatedAt: String
-  _updatedBy: TSUser
-  _schemaVersion: Float
-  _enabled: Boolean @deprecated(reason: "Use _status instead")
-  _enabledAt: String @deprecated(reason: "Use a custom date field instead")
-  _status: DefaultWorkflow
-  _references(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): UndefinedReferencePaginatedList
-  projects(filter: JSON, sort: [TSSearchSort], from: Int, size: Int, locale: String, enableLocaleFallback: Boolean = true): ProjectPaginatedList
-  searchSummary: String
-}
-
-type ClientPaginatedList {
-  results: [Client] @deprecated(reason: "Use items instead")
-  items: [Client]
-  total: Int
-}
-
-"""A Client search result"""
-type ClientSearchResult {
-  searchSummary: String
-  name: String
-  url: String
-  _id: String
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: String
-}
-
-"""Client search results"""
-type ClientSearchResults {
-  results: [ClientSearchResult]
-  total: Int
-}
-
 """Describes a structural update to an array of data."""
 input ContentStructureInput {
   """A deep path to the array being updated (e.g. a.b[1].c)."""
@@ -262,60 +160,6 @@ input CreateAssetInput {
 type CreateAssetResult {
   clientMutationId: String
   result: Asset
-}
-
-"""create Client input"""
-input CreateClientInput {
-  name: String!
-  logo: TSRelationshipInput
-  url: String!
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type CreateClientResult {
-  clientMutationId: String
-  result: Client
-}
-
-"""create Project input"""
-input CreateProjectInput {
-  """The name of the project"""
-  name: String!
-
-  """A short story about the project"""
-  description: JSON
-  client: TSRelationshipInput
-  endDate: String
-  startDate: String!
-  coverImage: TSRelationshipInput
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type CreateProjectResult {
-  clientMutationId: String
-  result: Project
 }
 
 """create TsStaticSite input"""
@@ -365,28 +209,6 @@ type DeleteAssetResult {
   result: Boolean
 }
 
-"""delete Client input"""
-input DeleteClientInput {
-  clientMutationId: String
-  _id: ID!
-}
-
-type DeleteClientResult {
-  clientMutationId: String
-  result: Boolean
-}
-
-"""delete Project input"""
-input DeleteProjectInput {
-  clientMutationId: String
-  _id: ID!
-}
-
-type DeleteProjectResult {
-  clientMutationId: String
-  result: Boolean
-}
-
 """delete TsStaticSite input"""
 input DeleteTsStaticSiteInput {
   clientMutationId: String
@@ -426,60 +248,6 @@ input DuplicateAssetInput {
 type DuplicateAssetResult {
   clientMutationId: String
   result: Asset
-}
-
-"""duplicate Client input"""
-input DuplicateClientInput {
-  name: String
-  logo: TSRelationshipInput
-  url: String
-  _id: ID!
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type DuplicateClientResult {
-  clientMutationId: String
-  result: Client
-}
-
-"""duplicate Project input"""
-input DuplicateProjectInput {
-  """The name of the project"""
-  name: String
-
-  """A short story about the project"""
-  description: JSON
-  client: TSRelationshipInput
-  endDate: String
-  startDate: String
-  coverImage: TSRelationshipInput
-  _id: ID!
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type DuplicateProjectResult {
-  clientMutationId: String
-  result: Project
 }
 
 """duplicate TsStaticSite input"""
@@ -527,6 +295,24 @@ type ImportResultType {
   countImported: Int
   ids: [ID]
   rejectedItems: [RejectedImportItem]
+}
+
+"""Hurzer"""
+type Johnny implements TSSearchable {
+  multipleChoiceCheckboxes: [String]
+  _id: ID
+  _version: Int
+  _contentTypeId: String
+  _contentTypeName: String
+  _createdAt: String
+  _createdBy: TSUser
+  _updatedAt: String
+  _updatedBy: TSUser
+  _schemaVersion: Float
+  _enabled: Boolean @deprecated(reason: "Use _status instead")
+  _enabledAt: String @deprecated(reason: "Use a custom date field instead")
+  _status: DefaultWorkflow
+  searchSummary: String
 }
 
 """
@@ -672,109 +458,8 @@ type Mutations {
   """
   duplicateTsStaticSite(input: DuplicateTsStaticSiteInput!, locale: String, enableLocaleFallback: Boolean = true): DuplicateTsStaticSiteResult
 
-  """Create Project"""
-  createProject(input: CreateProjectInput!): CreateProjectResult
-
-  """Update Project"""
-  updateProject(input: UpdateProjectInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateProjectResult
-
-  """Delete Project"""
-  deleteProject(input: DeleteProjectInput!): DeleteProjectResult
-
-  """
-  Duplicate Project including locales. Additional properties will override field values.
-  """
-  duplicateProject(input: DuplicateProjectInput!, locale: String, enableLocaleFallback: Boolean = true): DuplicateProjectResult
-
-  """
-  Create Project items from Asset csv, only single layer string fields are supported.
-  """
-  importProjectListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
-
-  """Update About"""
-  updateAbout(input: UpdateAboutInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateAboutResult
-
-  """Create Client"""
-  createClient(input: CreateClientInput!): CreateClientResult
-
-  """Update Client"""
-  updateClient(input: UpdateClientInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateClientResult
-
-  """Delete Client"""
-  deleteClient(input: DeleteClientInput!): DeleteClientResult
-
-  """
-  Duplicate Client including locales. Additional properties will override field values.
-  """
-  duplicateClient(input: DuplicateClientInput!, locale: String, enableLocaleFallback: Boolean = true): DuplicateClientResult
-
-  """
-  Create Client items from Asset csv, only single layer string fields are supported.
-  """
-  importClientListFromCSV(assetId: ID!, importColumns: [String]): ImportResultType
-}
-
-"""Work that's completed and featured in my portfolio"""
-type Project implements TSSearchable {
-  """The name of the project"""
-  name: String!
-  description: JSON
-  descriptionHtml(
-    imageConfig: JSON
-    images: TSImagesConfig
-
-    """A prefix to be all CSS classes in the generated HTML"""
-    classPrefix: String = ""
-  ): String
-  client(locale: String, enableLocaleFallback: Boolean = true): Client
-  endDate: String
-  startDate: String!
-  coverImage(locale: String, enableLocaleFallback: Boolean = true): Asset
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _createdBy: TSUser
-  _updatedAt: String
-  _updatedBy: TSUser
-  _schemaVersion: Float
-  _enabled: Boolean @deprecated(reason: "Use _status instead")
-  _enabledAt: String @deprecated(reason: "Use a custom date field instead")
-  _status: DefaultWorkflow
-  searchSummary: String
-}
-
-type ProjectPaginatedList {
-  results: [Project] @deprecated(reason: "Use items instead")
-  items: [Project]
-  total: Int
-}
-
-"""A Project search result"""
-type ProjectSearchResult {
-  searchSummary: String
-  name: String
-  endDate: String
-  startDate: String
-  _id: String
-  _version: Int
-  _contentTypeId: String
-  _contentTypeName: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: String
-}
-
-"""Project search results"""
-type ProjectSearchResults {
-  results: [ProjectSearchResult]
-  total: Int
+  """Update Johnny"""
+  updateJohnny(input: UpdateJohnnyInput!, structure: [ContentStructureInput], locale: String, enableLocaleFallback: Boolean = true): UpdateJohnnyResult
 }
 
 """Object representing a rejected item processed during the import."""
@@ -1045,131 +730,11 @@ type Root {
     where: TSWhereTsStaticSiteInput
   ): TsStaticSiteSearchResults
 
-  """Returns a list project in natural order."""
-  getProjectList(
-    locale: String
-    enableLocaleFallback: Boolean = true
+  """Get the johnny"""
+  johnny(locale: String, enableLocaleFallback: Boolean = true): Johnny @deprecated(reason: "Use getJohnny instead")
 
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereProjectInput
-  ): ProjectPaginatedList
-
-  """Get a project by ID"""
-  getProject(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Project
-
-  """Search the project index by keyword"""
-  searchProjectIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereProjectInput
-  ): ProjectSearchResults
-
-  """Get the about"""
-  about(locale: String, enableLocaleFallback: Boolean = true): About @deprecated(reason: "Use getAbout instead")
-
-  """Get the about"""
-  getAbout(locale: String, enableLocaleFallback: Boolean = true): About
-
-  """Returns a list client in natural order."""
-  getClientList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereClientInput
-  ): ClientPaginatedList
-
-  """Get a client by ID"""
-  getClient(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Client
-
-  """Search the client index by keyword"""
-  searchClientIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereClientInput
-  ): ClientSearchResults
+  """Get the johnny"""
+  getJohnny(locale: String, enableLocaleFallback: Boolean = true): Johnny
   withContext(locale: String, enableLocaleFallback: Boolean): WithContext
 }
 
@@ -1191,7 +756,7 @@ Nested boolean operators can be used to create complex filters.
 """
 input TSAndOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1220,17 +785,6 @@ input TSAndOperator {
   environmentVariables: TSWhereEnvironmentVariables
   triggers: TSWhereTriggers
   templateHash: TSWhereString
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  portrait: TSWhereAssetRelationship
-  socialProfiles: TSWhereSocialProfiles
-  biography: TSWhereDraftjs
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
 }
 
 type TSApiKey {
@@ -1249,7 +803,7 @@ Nested boolean operators can be used to create complex filters.
 """
 input TSAssetAndOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1277,7 +831,7 @@ NOT takes a single condition that must not appear in the matching results.
 """
 input TSAssetNotOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1303,7 +857,7 @@ Nested boolean operators can be used to create complex filters.
 """
 input TSAssetOrOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1401,71 +955,6 @@ input TSCancelStatusUpdateInput {
   timestamp: String!
 }
 
-"""
-AND takes an array of conditions that must appear in the matching results.
-Nested boolean operators can be used to create complex filters.
-"""
-input TSClientAndOperator {
-  name: TSWhereString
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSClientAndOperator]
-  OR: [TSClientOrOperator]
-  NOT: TSClientNotOperator
-}
-
-"""
-NOT takes a single condition that must not appear in the matching results.
-"""
-input TSClientNotOperator {
-  name: TSWhereString
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-}
-
-"""
-OR takes an array of conditions that should appear in the matching results.
-Nested boolean operators can be used to create complex filters.
-"""
-input TSClientOrOperator {
-  name: TSWhereString
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSClientAndOperator]
-  OR: [TSClientOrOperator]
-  NOT: TSClientNotOperator
-}
-
 type TSContentLocation {
   contentId: String
   contentTypeId: String
@@ -1524,6 +1013,62 @@ type TSInvite {
   status: String
 }
 
+"""
+AND takes an array of conditions that must appear in the matching results.
+Nested boolean operators can be used to create complex filters.
+"""
+input TSJohnnyAndOperator {
+  _id: TSWhereID
+  _version: TSWhereInteger
+  _contentTypeId: TSWhereID
+  _contentTypeName: TSWhereString
+  _createdAt: TSWhereDate
+  _updatedAt: TSWhereDate
+  _schemaVersion: TSWhereNumber
+  _enabled: TSWhereBoolean
+  _enabledAt: TSWhereDate
+  _status: TSWhereWorkflow
+  AND: [TSJohnnyAndOperator]
+  OR: [TSJohnnyOrOperator]
+  NOT: TSJohnnyNotOperator
+}
+
+"""
+NOT takes a single condition that must not appear in the matching results.
+"""
+input TSJohnnyNotOperator {
+  _id: TSWhereID
+  _version: TSWhereInteger
+  _contentTypeId: TSWhereID
+  _contentTypeName: TSWhereString
+  _createdAt: TSWhereDate
+  _updatedAt: TSWhereDate
+  _schemaVersion: TSWhereNumber
+  _enabled: TSWhereBoolean
+  _enabledAt: TSWhereDate
+  _status: TSWhereWorkflow
+}
+
+"""
+OR takes an array of conditions that should appear in the matching results.
+Nested boolean operators can be used to create complex filters.
+"""
+input TSJohnnyOrOperator {
+  _id: TSWhereID
+  _version: TSWhereInteger
+  _contentTypeId: TSWhereID
+  _contentTypeName: TSWhereString
+  _createdAt: TSWhereDate
+  _updatedAt: TSWhereDate
+  _schemaVersion: TSWhereNumber
+  _enabled: TSWhereBoolean
+  _enabledAt: TSWhereDate
+  _status: TSWhereWorkflow
+  AND: [TSJohnnyAndOperator]
+  OR: [TSJohnnyOrOperator]
+  NOT: TSJohnnyNotOperator
+}
+
 type TSLocales {
   defaultLocale: String!
   locales: [String]
@@ -1545,7 +1090,7 @@ NOT takes a single condition that must not appear in the matching results.
 """
 input TSNotOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1563,9 +1108,9 @@ input TSNotOperator {
   _enabled: TSWhereBoolean
   _enabledAt: TSWhereDate
   _status: TSWhereWorkflow
-  AND: [TSClientAndOperator]
-  OR: [TSClientOrOperator]
-  NOT: TSClientNotOperator
+  AND: [TSJohnnyAndOperator]
+  OR: [TSJohnnyOrOperator]
+  NOT: TSJohnnyNotOperator
   baseUrl: TSWhereString
   provider: TSWhereString
   idKey: TSWhereString
@@ -1574,17 +1119,6 @@ input TSNotOperator {
   environmentVariables: TSWhereEnvironmentVariables
   triggers: TSWhereTriggers
   templateHash: TSWhereString
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  portrait: TSWhereAssetRelationship
-  socialProfiles: TSWhereSocialProfiles
-  biography: TSWhereDraftjs
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
 }
 
 """
@@ -1593,7 +1127,7 @@ Nested boolean operators can be used to create complex filters.
 """
 input TSOrOperator {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -1622,17 +1156,6 @@ input TSOrOperator {
   environmentVariables: TSWhereEnvironmentVariables
   triggers: TSWhereTriggers
   templateHash: TSWhereString
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  portrait: TSWhereAssetRelationship
-  socialProfiles: TSWhereSocialProfiles
-  biography: TSWhereDraftjs
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
 }
 
 type TSPathUsage {
@@ -1680,32 +1203,6 @@ type TSProject {
 }
 
 """
-AND takes an array of conditions that must appear in the matching results.
-Nested boolean operators can be used to create complex filters.
-"""
-input TSProjectAndOperator {
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSProjectAndOperator]
-  OR: [TSProjectOrOperator]
-  NOT: TSProjectNotOperator
-}
-
-"""
 A Project is you main workspace it stores the content that powers your API
 """
 type TSProjectListItem {
@@ -1724,54 +1221,6 @@ type TSProjectListItem {
   defaultTimezone: String!
 }
 
-"""
-NOT takes a single condition that must not appear in the matching results.
-"""
-input TSProjectNotOperator {
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-}
-
-"""
-OR takes an array of conditions that should appear in the matching results.
-Nested boolean operators can be used to create complex filters.
-"""
-input TSProjectOrOperator {
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSProjectAndOperator]
-  OR: [TSProjectOrOperator]
-  NOT: TSProjectNotOperator
-}
-
 """A project template available for import."""
 type TSProjectTemplate {
   id: String!
@@ -1780,11 +1229,6 @@ type TSProjectTemplate {
   avatarPath: String
   glitchProjectName: String
   sourcePath: String!
-}
-
-input TSRelationshipInput {
-  contentTypeId: String!
-  id: String!
 }
 
 type TSRemoveWorkflowResponse {
@@ -2187,65 +1631,9 @@ input TSWhereAssetInput {
   NOT: TSAssetNotOperator
 }
 
-input TSWhereAssetRelationship {
-  title: TSWhereString
-  description: TSWhereString
-  filename: TSWhereString
-  caption: TSWhereDraftjs
-  credit: TSWhereDraftjs
-  path: TSWhereString
-  mimeType: TSWhereString
-  sourceUrl: TSWhereString
-  uploadStatus: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-}
-
 input TSWhereBoolean {
   """Exact match"""
   eq: Boolean
-}
-
-input TSWhereClientInput {
-  name: TSWhereString
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSClientAndOperator]
-  OR: [TSClientOrOperator]
-  NOT: TSClientNotOperator
-}
-
-input TSWhereClientRelationship {
-  name: TSWhereString
-  url: TSWhereString
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
 }
 
 input TSWhereDate {
@@ -2282,7 +1670,7 @@ input TSWhereID {
 
 input TSWhereInput {
   title: TSWhereString
-  asset_description: TSWhereString
+  description: TSWhereString
   filename: TSWhereString
   caption: TSWhereDraftjs
   credit: TSWhereDraftjs
@@ -2311,17 +1699,6 @@ input TSWhereInput {
   environmentVariables: TSWhereEnvironmentVariables
   triggers: TSWhereTriggers
   templateHash: TSWhereString
-  name: TSWhereString
-  project_description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  portrait: TSWhereAssetRelationship
-  socialProfiles: TSWhereSocialProfiles
-  biography: TSWhereDraftjs
-  logo: TSWhereAssetRelationship
-  url: TSWhereString
 }
 
 input TSWhereInteger {
@@ -2362,34 +1739,6 @@ input TSWhereNumber {
 
   """Array of possible exact match values."""
   in: [Float]
-}
-
-input TSWhereProjectInput {
-  name: TSWhereString
-  description: TSWhereDraftjs
-  client: TSWhereClientRelationship
-  endDate: TSWhereDate
-  startDate: TSWhereDate
-  coverImage: TSWhereAssetRelationship
-  _id: TSWhereID
-  _version: TSWhereInteger
-  _contentTypeId: TSWhereID
-  _contentTypeName: TSWhereString
-  _createdAt: TSWhereDate
-  _updatedAt: TSWhereDate
-  _schemaVersion: TSWhereNumber
-  _enabled: TSWhereBoolean
-  _enabledAt: TSWhereDate
-  _status: TSWhereWorkflow
-  AND: [TSProjectAndOperator]
-  OR: [TSProjectOrOperator]
-  NOT: TSProjectNotOperator
-}
-
-input TSWhereSocialProfiles {
-  profileUrl: TSWhereString
-  socialNetworkIcon: TSWhereAssetRelationship
-  socialNetwork: TSWhereString
 }
 
 input TSWhereString {
@@ -2490,38 +1839,6 @@ input TSWorkflowStepInput {
   canEdit: [String]
 }
 
-union UndefinedReference = Project | About | Client
-
-type UndefinedReferencePaginatedList {
-  results: [UndefinedReference] @deprecated(reason: "Use items instead")
-  items: [UndefinedReference]
-  total: Int
-}
-
-"""update About input"""
-input UpdateAboutInput {
-  portrait: TSRelationshipInput
-  socialProfiles: [AboutSocialProfilesInput]
-  biography: JSON
-  _id: ID
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type UpdateAboutResult {
-  clientMutationId: String
-  result: About
-}
-
 """update Asset input"""
 input UpdateAssetInput {
   title: String
@@ -2552,12 +1869,10 @@ type UpdateAssetResult {
   result: Asset
 }
 
-"""update Client input"""
-input UpdateClientInput {
-  name: String
-  logo: TSRelationshipInput
-  url: String
-  _id: ID!
+"""update Johnny input"""
+input UpdateJohnnyInput {
+  multipleChoiceCheckboxes: [String]
+  _id: ID
   _version: Int
   _contentTypeId: String
   _createdAt: String
@@ -2571,39 +1886,9 @@ input UpdateClientInput {
   clientMutationId: String
 }
 
-type UpdateClientResult {
+type UpdateJohnnyResult {
   clientMutationId: String
-  result: Client
-}
-
-"""update Project input"""
-input UpdateProjectInput {
-  """The name of the project"""
-  name: String
-
-  """A short story about the project"""
-  description: JSON
-  client: TSRelationshipInput
-  endDate: String
-  startDate: String
-  coverImage: TSRelationshipInput
-  _id: ID!
-  _version: Int
-  _contentTypeId: String
-  _createdAt: String
-  _createdBy: String
-  _updatedAt: String
-  _updatedBy: String
-  _schemaVersion: Float
-  _enabled: Boolean
-  _enabledAt: String
-  _status: DefaultWorkflow
-  clientMutationId: String
-}
-
-type UpdateProjectResult {
-  clientMutationId: String
-  result: Project
+  result: Johnny
 }
 
 """update TsStaticSite input"""
@@ -2818,129 +2103,9 @@ type WithContext {
     where: TSWhereTsStaticSiteInput
   ): TsStaticSiteSearchResults
 
-  """Returns a list project in natural order."""
-  getProjectList(
-    locale: String
-    enableLocaleFallback: Boolean = true
+  """Get the johnny"""
+  johnny(locale: String, enableLocaleFallback: Boolean = true): Johnny @deprecated(reason: "Use getJohnny instead")
 
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereProjectInput
-  ): ProjectPaginatedList
-
-  """Get a project by ID"""
-  getProject(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Project
-
-  """Search the project index by keyword"""
-  searchProjectIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereProjectInput
-  ): ProjectSearchResults
-
-  """Get the about"""
-  about(locale: String, enableLocaleFallback: Boolean = true): About @deprecated(reason: "Use getAbout instead")
-
-  """Get the about"""
-  getAbout(locale: String, enableLocaleFallback: Boolean = true): About
-
-  """Returns a list client in natural order."""
-  getClientList(
-    locale: String
-    enableLocaleFallback: Boolean = true
-
-    """Filter out content that is not enabled. Defaults to true."""
-    onlyEnabled: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereClientInput
-  ): ClientPaginatedList
-
-  """Get a client by ID"""
-  getClient(_id: ID!, locale: String, enableLocaleFallback: Boolean = true): Client
-
-  """Search the client index by keyword"""
-  searchClientIndex(
-    locale: String
-    enableLocaleFallback: Boolean = true
-    terms: String
-
-    """The offset from the first result you want to fetch."""
-    from: Int
-
-    """The maximum number of items to return."""
-    size: Int
-
-    """An elasticsearch style filter. Overrides onlyEnabled."""
-    filter: JSON
-
-    """An list of fields to sort by."""
-    sort: [TSSearchSort]
-
-    """
-    The where clause uses the boolean AND, OR, and NOT parameters to construct
-    complex filters based on the values of your fields. It applies an implicit
-    AND to all the top-level keys. To avoid this, use a single OR or NOT key as
-    the only top-level key.
-    """
-    where: TSWhereClientInput
-  ): ClientSearchResults
+  """Get the johnny"""
+  getJohnny(locale: String, enableLocaleFallback: Boolean = true): Johnny
 }

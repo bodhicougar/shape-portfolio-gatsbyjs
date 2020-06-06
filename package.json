@@ -7,7 +7,6 @@
     "email": "contact@takeshape.io"
   },
   "dependencies": {
-    "@takeshape/cli": "^5.2.0",
     "@takeshape/routing": "^5.0.7",
     "gatsby": "^2.23.1",
     "gatsby-plugin-manifest": "^2.0.5",
@@ -27,6 +26,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@takeshape/cli": "^5.2.0",
     "babel-eslint": "^10.0.1",
     "dotenv": "^6.1.0",
     "eslint-config-prettier": "^3.3.0",
