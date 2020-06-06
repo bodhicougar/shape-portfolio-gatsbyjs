@@ -7,17 +7,16 @@
     "email": "contact@takeshape.io"
   },
   "dependencies": {
+    "@takeshape/cli": "^5.2.0",
+    "@takeshape/routing": "^5.0.7",
     "gatsby": "^2.23.1",
     "gatsby-plugin-manifest": "^2.0.5",
     "gatsby-plugin-offline": "^2.0.5",
     "gatsby-plugin-react-helmet": "^3.0.0",
-    "gatsby-source-graphql": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^5.2.0",
-    "slugify": "^1.3.2",
-    "takeshape-cli": "^4.65.0",
-    "takeshape-routing": "^4.53.0"
+    "slugify": "^1.3.2"
   },
   "license": "MIT",
   "scripts": {
